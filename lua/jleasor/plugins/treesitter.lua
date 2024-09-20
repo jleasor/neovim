@@ -1,61 +1,39 @@
 return {
-  "nvim-treesitter/nvim-treesitter",
-  event = { "BufReadPre", "BufNewFile" },
-  build = ":TSUpdate",
-  dependencies = {
-    "windwp/nvim-ts-autotag",
-  },
-  config = function()
-    -- import nvim-treesitter plugin
-    local treesitter = require("nvim-treesitter.configs")
+    "nvim-treesitter/nvim-treesitter",
+    tag = "v0.9.2",
+    build = ":TSUpdate",
+    dependencies = {
+        {"nvim-treesitter/nvim-treesitter-textobjects"}, -- Syntax aware text-objects
+        {
+            "nvim-treesitter/nvim-treesitter-context", -- Show code context
+            opts = {enable = true, mode = "topline", line_numbers = true}
+        }
+    },
+    config = function()
+        local treesitter = require("nvim-treesitter.configs")
 
-    -- configure treesitter
-    treesitter.setup({ -- enable syntax highlighting
-      highlight = {
-        enable = true,
-      },
-      -- enable indentation
-      indent = { enable = true },
-      -- enable autotagging (w/ nvim-ts-autotag plugin)
-      autotag = {
-        enable = true,
-      },
-      -- ensure these language parsers are installed
-      ensure_installed = {
-        "json",
-        "javascript",
-        "yaml",
-        "html",
-        "css",
-        "markdown",
-        "markdown_inline",
-        "graphql",
-        "bash",
-        "lua",
-        "vim",
-        "dockerfile",
-        "gitignore",
-        "query",
-        "vimdoc",
-        "go",
-        "gomod",
-        "gosum",
-        "sql",
-        "yaml",
-        "csv",
-        "proto",
-        "rust",
-        "toml",
-      },
-      incremental_selection = {
-        enable = true,
-        keymaps = {
-          init_selection = "<C-space>",
-          node_incremental = "<C-space>",
-          scope_incremental = false,
-          node_decremental = "<bs>",
-        },
-      },
-    })
-  end,
+        vim.api.nvim_create_autocmd("FileType", {
+            pattern = {"markdown"},
+            callback = function(ev)
+                -- treesitter-context is buggy with Markdown files
+                require("treesitter-context").disable()
+            end
+        })
+
+        treesitter.setup({
+            ensure_installed = {
+                "csv", "dockerfile", "gitignore", "go", "gomod", "gosum",
+                "gowork", "javascript", "json", "lua", "markdown", "proto",
+                "python", "rego", "ruby", "sql", "svelte", "yaml", "php"
+            },
+            indent = {enable = true},
+            auto_install = true,
+            sync_install = false,
+            highlight = {
+                enable = true,
+                disable = {"csv"} -- preferring chrisbra/csv.vim
+            },
+            textobjects = {select = {enable = true, lookahead = true}}
+        })
+    end
 }

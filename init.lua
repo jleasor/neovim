@@ -1,3 +1,5 @@
-require ("jleasor.options")
-require ("jleasor.keymaps")
-require ("jleasor.lazy")
+require('config.lazy')
+require('config.keymaps')
+require('plugins.colorscheme')
+require('config.options')
+require('plugins.telescope')

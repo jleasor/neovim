@@ -1,10 +1,5 @@
 -- Keymaps are automatically loaded on the VeryLazy event
 
--- Key mappings
-vim.g.mapleader = " "                              -- Set leader key to space
-vim.g.maplocalleader = " "                         -- Set local leader key (NEW)
-
-
 -- Insert and esc mappings
 vim.api.nvim_set_keymap("i","jj","<Esc>",{noremap=false})
 vim.api.nvim_set_keymap("i","jk","<Esc>",{noremap=false})
